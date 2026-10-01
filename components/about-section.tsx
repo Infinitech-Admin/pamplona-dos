@@ -2,12 +2,30 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Home, Leaf, Award, X, ZoomIn, Check } from "lucide-react";
+import {
+  Users,
+  Home,
+  MapPin,
+  CalendarDays,
+  X,
+  ZoomIn,
+  Check,
+} from "lucide-react";
 
 // Palette: deep green base, orange used sparingly (same as the other sections)
 const GREEN = "#1F6B2E";
 const GREEN_DARK = "#124A1F";
 const ORANGE = "#F47B20";
+
+// ---- Real data (update here when new figures come out) ----
+// Population: PSA 2024 Census of Population (POPCEN) – 11,443
+// Households: PSA 2015 Census – 2,727 (latest figure found)
+// Land area & founding: Barangay Pamplona Dos official page – 112.16 ha, P.D. 1332 (April 3, 1978)
+// Officials: Punong Barangay + 7 Kagawads + SK Chairperson + Secretary + Treasurer = 11 (per Local Government Code)
+const POPULATION = "11,443";
+const HOUSEHOLDS = "2,727";
+const LAND_AREA = "112.16 ha";
+const FOUNDED = "1978";
 
 export default function AboutSection() {
   const [isImageModalOpen, setIsImageModalOpen] = React.useState(false);
@@ -28,23 +46,27 @@ export default function AboutSection() {
   }, [isImageModalOpen]);
 
   const stats = [
-    { icon: Users, number: "18,500+", label: "Proud Residents" },
-    { icon: Home, number: "4,200+", label: "Households" },
-    { icon: Leaf, number: "3", label: "Green Spaces" },
-    { icon: Award, number: "20+", label: "Community Programs" },
+    { icon: Users, number: POPULATION, label: "Residents (2024 Census)" },
+    { icon: Home, number: HOUSEHOLDS, label: "Households (2015 Census)" },
+    { icon: MapPin, number: LAND_AREA, label: "Total Land Area" },
+    {
+      icon: CalendarDays,
+      number: FOUNDED,
+      label: "Year Established (P.D. 1332)",
+    },
   ];
 
   const highlights = [
     "Delivering efficient and responsive barangay services",
-    "Fostering unity through community events and festivals",
-    "Championing environmental sustainability initiatives",
-    "Empowering residents through livelihood and skills programs",
+    "Fostering unity through community activities",
+    "Promoting peace, order, and public safety",
+    "Supporting residents through barangay programs and assistance",
   ];
 
   const teamStats = [
-    { number: "11+", label: "Barangay Officials" },
-    { number: "10+", label: "Dedicated Staff Members" },
-    { number: "24/7", label: "Service Commitment" },
+    { number: "11", label: "Barangay Officials" },
+    { number: "7", label: "Barangay Kagawads" },
+    { number: "1", label: "Punong Barangay" },
   ];
 
   return (
@@ -74,16 +96,16 @@ export default function AboutSection() {
             </h2>
 
             <p className="mb-5 text-lg leading-relaxed text-gray-700">
-              Nestled in the bustling city of Las Piñas, Barangay Pamplona Dos
-              is a thriving urban community where tradition meets progress. Home
-              to over 18,500 residents, we are a diverse neighborhood united by
-              shared values of cooperation, resilience, and progress.
+              Barangay Pamplona Dos is one of the 20 barangays of Las Piñas
+              City, National Capital Region. Created by Presidential Decree No.
+              1332 on April 3, 1978, it covers {LAND_AREA.replace(" ha", "")}{" "}
+              hectares and is home to {POPULATION} residents based on the 2024
+              Census of Population.
             </p>
 
             <p className="mb-7 text-lg leading-relaxed text-gray-700">
-              Our barangay is more than just a place—it's a home where families
-              grow, businesses flourish, and every voice matters. We take pride
-              in:
+              Our barangay is more than just a place—it’s a home where families
+              grow and every voice matters. We take pride in:
             </p>
 
             <ul className="space-y-4">
@@ -156,8 +178,8 @@ export default function AboutSection() {
               </h3>
             </div>
             <p className="text-lg text-gray-600">
-              Dedicated leaders and staff working together to serve Barangay
-              Pamplona Dos.
+              Your elected officials, led by Punong Barangay Roberto D.H.
+              Villalon, serving Barangay Pamplona Dos.
             </p>
           </div>
 
@@ -169,7 +191,7 @@ export default function AboutSection() {
             <div className="aspect-[4/3] sm:aspect-[21/9] bg-[#E4F1E4]">
               <img
                 src="/our-team2.jpg"
-                alt="Barangay Pamplona Dos Team"
+                alt="Barangay Pamplona Dos Officials"
                 className="h-full w-full object-cover"
               />
             </div>
@@ -183,7 +205,7 @@ export default function AboutSection() {
               }}
             >
               <h4 className="text-xl font-bold text-white sm:text-2xl">
-                Barangay Officials & Staff 2024
+                Barangay Officials 2023–2026
               </h4>
               <p className="text-white/85">
                 Together, building a stronger community for all
@@ -242,12 +264,12 @@ export default function AboutSection() {
             >
               <img
                 src="/our-team2.jpg"
-                alt="Barangay Pamplona Dos Team - Full View"
+                alt="Barangay Pamplona Dos Officials - Full View"
                 className="max-h-[74vh] w-full rounded-2xl object-contain"
               />
               <div className="mt-5 text-center">
                 <h4 className="mb-1 text-xl font-bold text-white sm:text-2xl">
-                  Barangay Officials & Staff 2024
+                  Barangay Officials 2023–2026
                 </h4>
                 <p className="text-white/75">
                   Together, building a stronger community for all

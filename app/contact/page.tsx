@@ -17,12 +17,16 @@ const inputOk =
   "border-gray-300 focus:border-[#1F6B2E] focus:ring-[#1F6B2E]/15";
 const inputErr = "border-red-500 focus:border-red-500 focus:ring-red-500/15";
 
+// Barangay Pamplona Dos Hall – Aquarius St., Pamplona Park Subd., Las Piñas City
+const HALL_LAT = 14.4495828;
+const HALL_LNG = 120.9748902;
+
 function MapEmbed() {
   return (
     <div className="h-[420px] w-full">
       <iframe
         title="Barangay Pamplona Dos location map"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.5080063712476!2d120.97978174729064!3d14.455493844679417!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cde32848c3d7%3A0xeeaef0ae39538a8b!2s1%20Metals%20Rd%2C%20Las%20Pi%C3%B1as%2C%201750%20Metro%20Manila!5e0!3m2!1sen!2sph!4v1763974724562!5m2!1sen!2sph"
+        src={`https://www.google.com/maps?q=${HALL_LAT},${HALL_LNG}&z=17&output=embed`}
         className="h-full w-full border-0"
         allowFullScreen
         loading="lazy"
@@ -36,32 +40,36 @@ const contactItems = [
   {
     icon: MapPin,
     title: "Office Location",
-    details: "P1 Metals Rd., Camella 4A, Las Piñas, Philippines",
-    link: "https://maps.app.goo.gl/8kzbXckLdXSNE96z5",
+    details:
+      "Barangay Hall, Aquarius St., Pamplona Park Subd., Pamplona Dos, Las Piñas City",
+    link: `https://www.google.com/maps/search/?api=1&query=${HALL_LAT},${HALL_LNG}`,
     isExternal: true,
   },
   {
     icon: Phone,
     title: "Phone",
-    details: "(02) 8872-9664",
-    link: "tel:(02) 8872-9664",
+    details: "(02) 8874-6224",
+    link: "tel:+63288746224",
     isExternal: false,
   },
   {
     icon: Mail,
     title: "Email",
-    details: "barangay.pamplonatres.lpc@gmail.com",
-    link: "mailto:barangay.pamplonatres.lpc@gmail.com",
+    details: "pamplonados.lp@gmail.com",
+    link: "mailto:pamplonados.lp@gmail.com",
     isExternal: false,
   },
   {
     icon: Clock,
     title: "Office Hours",
+    // TODO: confirm actual hours with the barangay hall
     details: "Monday - Friday: 8:00 AM - 5:00 PM",
     link: null,
     isExternal: false,
   },
 ];
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -95,8 +103,7 @@ export default function ContactPage() {
     }
 
     // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!EMAIL_REGEX.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
 
@@ -146,7 +153,7 @@ export default function ContactPage() {
   return (
     <PageLayout
       title="Contact Us"
-      subtitle="Get in touch with Pamplona Dos Community"
+      subtitle="Get in touch with Barangay Pamplona Dos"
       image="/newspaper-journalism-city-news.jpg"
     >
       <section className="bg-[#F4F8F3] px-4 py-20 sm:px-6 lg:px-8">
@@ -246,10 +253,9 @@ export default function ContactPage() {
                           setErrors({ ...errors, email: undefined });
                       }}
                       onBlur={() => {
-                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                         if (
                           formData.email &&
-                          !emailRegex.test(formData.email)
+                          !EMAIL_REGEX.test(formData.email)
                         ) {
                           setErrors({
                             ...errors,
@@ -403,11 +409,11 @@ export default function ContactPage() {
             style={{ backgroundColor: ORANGE }}
           />
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-            Access government services easily
+            Access barangay services easily
           </h2>
           <p className="mx-auto mb-8 max-w-2xl text-lg leading-relaxed text-white/85">
-            Request documents, track applications, and stay updated with city
-            services in one place.
+            Request documents, track applications, and stay updated with
+            barangay services in one place.
           </p>
 
           <div className="flex flex-col justify-center gap-3 sm:flex-row">
