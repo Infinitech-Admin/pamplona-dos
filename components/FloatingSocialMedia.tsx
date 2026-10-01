@@ -28,7 +28,7 @@ export default function FloatingSocialMedia() {
     {
       name: "Facebook",
       icon: Facebook,
-      url: "https://www.facebook.com/ilovepamplonatres/",
+      url: "https://www.facebook.com/Brngypamplonados/",
       color: "bg-blue-600 hover:bg-blue-700",
     },
     {
@@ -40,19 +40,19 @@ export default function FloatingSocialMedia() {
     {
       name: "Telegram",
       icon: Send,
-      url: "https://t.me/pamplonaTrescity",
+      url: "",
       color: "bg-sky-500 hover:bg-sky-600",
     },
     {
       name: "Email",
       icon: Mail,
-      url: "mailto:barangay.pamplonatres.lpc@gmail.com",
+      url: "mailto:pamplonados.lp@gmail.com",
       color: "bg-brand-green-500 hover:bg-brand-red-600",
     },
     {
       name: "Phone",
       icon: Phone,
-      url: "tel:(02) 8872-9664",
+      url: "tel:(02) 288746224",
       color: "bg-blue-500 hover:bg-blue-600",
     },
   ];
