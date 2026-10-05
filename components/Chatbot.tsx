@@ -11,6 +11,40 @@ interface Message {
   quickReplies?: string[];
 }
 
+// ---------------------------------------------------------------
+// Barangay Pamplona Dos data (keep in sync with contact/about pages)
+// ---------------------------------------------------------------
+// Verified:
+//  - Phone (02) 8874-6224, email, address, hours -> your Contact page
+//    (phone also listed on barangaydirectory.com)
+//  - Punong Barangay Roberto D.H. Villalon, 2023-2026 term
+//  - P.D. 1332 (Apr 3, 1978), 112.16 ha, 11,443 pop. (PSA 2024 POPCEN)
+// TODO: confirm with the barangay hall -> office hours, fees, requirements,
+//       mission/vision/values, health center schedule, police/BFP numbers
+const BRGY = {
+  name: "Barangay Pamplona Dos",
+  city: "Las Piñas City, Metro Manila",
+  address:
+    "Barangay Hall, Aquarius St., Pamplona Park Subd., Pamplona Dos, Las Piñas City",
+  phone: "(02) 8874-6224",
+  email: "pamplonados.lp@gmail.com",
+  hours: "Monday to Friday\n8:00 AM - 5:00 PM", // TODO: confirm
+  captain: "Roberto D.H. Villalon",
+  term: "2023–2026",
+  population: "11,443",
+  landArea: "112.16 hectares",
+  founded: "April 3, 1978 (Presidential Decree No. 1332)",
+};
+
+const MAIN_MENU = [
+  "About Us",
+  "Our Mission",
+  "Our Vision",
+  "Services",
+  "Contact Info",
+  "Office Hours",
+];
+
 export default function Chatbot() {
   const pathname = usePathname();
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -19,14 +53,7 @@ export default function Chatbot() {
     {
       type: "bot",
       text: "Hi there! 👋 I'm your Pamplona Dos Barangay Assistant. How can I help you today?",
-      quickReplies: [
-        "Our Mission",
-        "Our Vision",
-        "Our Values",
-        "Contact Info",
-        "Office Hours",
-        "Services",
-      ],
+      quickReplies: MAIN_MENU,
     },
   ]);
   const [inputMessage, setInputMessage] = useState("");
@@ -53,10 +80,8 @@ export default function Chatbot() {
     const messageToSend = message || inputMessage;
     if (messageToSend.trim() === "") return;
 
-    // Add user message
     setMessages((prev) => [...prev, { type: "user", text: messageToSend }]);
 
-    // Simulate bot response
     setTimeout(() => {
       const botResponse = getBotResponse(messageToSend);
       setMessages((prev) => [...prev, botResponse]);
@@ -70,220 +95,181 @@ export default function Chatbot() {
   };
 
   const getBotResponse = (message: string): Message => {
-    const lowerMessage = message.toLowerCase();
+    const m = message.toLowerCase();
+    // whole-word match, so "hi" doesn't match "this" and "id" doesn't match "residency"
+    const word = (w: string) => new RegExp(`\\b${w}\\b`).test(m);
 
-    if (lowerMessage.includes("mission") || lowerMessage === "our mission") {
+    if (
+      m.includes("about") ||
+      m.includes("history") ||
+      m.includes("captain") ||
+      m.includes("official")
+    ) {
+      return {
+        type: "bot",
+        text: `🏘️ About ${BRGY.name}:\n\n${BRGY.name} is one of the 20 barangays of Las Piñas City, NCR. It was created on ${BRGY.founded}.\n\n• Land area: ${BRGY.landArea}\n• Population: ${BRGY.population} (PSA 2024 Census)\n• Punong Barangay: ${BRGY.captain}\n• Current term: ${BRGY.term}`,
+        quickReplies: ["Our Mission", "Our Vision", "Visit Us", "Services"],
+      };
+    } else if (m.includes("mission")) {
       return {
         type: "bot",
         text: "🎯 Our Mission:\n\nTo provide efficient, responsive, and inclusive barangay services that promote the welfare and development of every resident of Pamplona Dos.\n\nWe are committed to delivering accessible, transparent, and quality services that address the needs of our community.",
         quickReplies: ["Our Vision", "Our Values", "Contact Info", "Services"],
       };
-    } else if (
-      lowerMessage.includes("vision") ||
-      lowerMessage === "our vision"
-    ) {
+    } else if (m.includes("vision")) {
       return {
         type: "bot",
-        text: "🌟 Our Vision:\n\nA progressive, peaceful, and united Barangay Pamplona Dos where every resident enjoys a high quality of life through collaborative governance and sustainable development.\n\nWe envision our barangay as a model community in Las Piñas City, where tradition meets innovation for the betterment of all.",
+        text: "🌟 Our Vision:\n\nA progressive, peaceful, and united Barangay Pamplona Dos where every resident enjoys a high quality of life through collaborative governance and sustainable development.",
         quickReplies: ["Our Mission", "Our Values", "Contact Info", "Services"],
       };
+    } else if (m.includes("values")) {
+      return {
+        type: "bot",
+        text: "💎 Our Values:\n\n• Malasakit - We care deeply for our residents\n• Transparency - We operate with honesty and openness\n• Unity - We work together as one community\n• Service Excellence - We deliver the best for our barangay",
+        quickReplies: ["Our Mission", "Our Vision", "Visit Us", "Contact Info"],
+      };
     } else if (
-      lowerMessage.includes("values") ||
-      lowerMessage === "our values"
+      m.includes("visit") ||
+      m.includes("address") ||
+      m.includes("location") ||
+      m.includes("where")
     ) {
       return {
         type: "bot",
-        text: "💎 Our Values:\n\n• Malasakit - We care deeply for our residents\n• Transparency - We operate with honesty and openness\n• Unity - We work together as one community\n• Service Excellence - We deliver the best for our barangay\n\nBarangay Pamplona Dos is dedicated to serving our community with integrity, fostering grassroots participation, and creating opportunities for every resident to thrive.",
-        quickReplies: ["Our Mission", "Our Vision", "Visit Us", "Contact Info"],
-      };
-    } else if (lowerMessage.includes("visit") || lowerMessage === "visit us") {
-      return {
-        type: "bot",
-        text: "📍 Visit Us:\n\nBarangay Pamplona Dos Office\nP1 Metals Rd., Camella 4A\nLas Piñas City, Metro Manila\nPhilippines\n\nWe welcome all residents to visit us for any barangay concerns, assistance, or inquiries. Our staff is ready to serve you!",
-        quickReplies: [
-          "Office Hours",
-          "Contact Info",
-          "Services",
-          "Our Mission",
-        ],
+        text: `📍 Visit Us:\n\n${BRGY.name} Hall\nAquarius St., Pamplona Park Subd.\nPamplona Dos, ${BRGY.city}\nPhilippines\n\nWe welcome all residents to visit us for any barangay concerns, assistance, or inquiries.`,
+        quickReplies: ["Office Hours", "Contact Info", "Services", "About Us"],
       };
     } else if (
-      lowerMessage.includes("hello") ||
-      lowerMessage.includes("hi") ||
-      lowerMessage.includes("kumusta")
+      word("hello") ||
+      word("hi") ||
+      word("hey") ||
+      m.includes("kumusta")
     ) {
       return {
         type: "bot",
         text: "Hello! 👋 Kumusta! How can I help you with Barangay Pamplona Dos services today?",
-        quickReplies: [
-          "Our Mission",
-          "Our Vision",
-          "Services",
-          "Contact Info",
-          "Office Hours",
-        ],
+        quickReplies: MAIN_MENU,
       };
-    } else if (
-      lowerMessage.includes("service") ||
-      lowerMessage.includes("services")
-    ) {
+    } else if (m.includes("clearance")) {
       return {
         type: "bot",
-        text: "🏛️ Barangay Services Available:\n\n• Barangay Clearance\n• Cedula (Community Tax Certificate)\n• Business Permit\n• Indigency Certificate\n• Residency Certificate\n• Good Moral Certificate\n• Barangay Blotter\n\nWhat specific service do you need?",
-        quickReplies: ["Clearance", "Cedula", "Business Permit", "Indigency"],
-      };
-    } else if (
-      lowerMessage.includes("contact") ||
-      lowerMessage === "contact info"
-    ) {
-      return {
-        type: "bot",
-        text: "📞 Contact Us:\n\n• Phone: (02) 8872-9664\n• Email: barangay.pamplonatres.lpc@gmail.com\n• Office: P1 Metals Rd., Camella 4A, Las Piñas, Philippines\n\nFeel free to reach out through any of these channels!",
-        quickReplies: ["Office Hours", "Visit Us", "Services", "Our Mission"],
-      };
-    } else if (
-      lowerMessage.includes("hours") ||
-      lowerMessage.includes("time") ||
-      lowerMessage.includes("schedule") ||
-      lowerMessage === "office hours"
-    ) {
-      return {
-        type: "bot",
-        text: "🕐 Office Hours:\n\nMonday to Friday\n8:00 AM - 5:00 PM\n\n⚠️ For emergencies, please contact our barangay hotline.\n\nNeed help with a specific service?",
-        quickReplies: ["Services", "Contact Info", "Visit Us"],
-      };
-    } else if (
-      lowerMessage.includes("clearance") ||
-      lowerMessage.includes("barangay clearance")
-    ) {
-      return {
-        type: "bot",
-        text: "📋 Barangay Clearance:\n\nApply for barangay clearance certificate\n\nRequirements:\n• Valid ID\n• Cedula\n• Recent Photo (1x1)\n• Processing Fee\n\nVisit the Barangay Hall during office hours. Processing time is usually same day.\n\nNeed help with anything else?",
+        text: "📋 Barangay Clearance:\n\nRequirements:\n• Valid ID\n• Cedula\n• Recent Photo (1x1)\n• Processing Fee\n\nVisit the Barangay Hall during office hours. Please call ahead to confirm current requirements and fees.",
         quickReplies: ["Office Hours", "Contact Info", "Services", "Cedula"],
       };
-    } else if (
-      lowerMessage.includes("barangay id") ||
-      lowerMessage.includes("id")
-    ) {
+    } else if (m.includes("cedula") || m.includes("community tax")) {
       return {
         type: "bot",
-        text: "🪪 Need a Barangay ID?\n\nPlease visit the Barangay Hall for ID processing during office hours. Bring valid identification and proof of residency.\n\nWhat else can I help you with?",
+        text: "📄 Cedula (Community Tax Certificate):\n\nRequirements:\n• Valid ID\n• Proof of income (for employed)\n• Real property declaration (if applicable)\n• Payment of tax\n\nPlease call the Barangay Hall to confirm if it is issued on-site.",
+        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
+      };
+    } else if (m.includes("business")) {
+      return {
+        type: "bot",
+        text: "🏢 Business Permit:\n\nThe barangay provides clearance/endorsement for your city business permit application.\n\nRequirements:\n• Valid ID\n• Business registration documents\n• Proof of business location\n• Barangay Clearance\n\nPlease call the Barangay Hall to confirm current requirements.",
+        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
+      };
+    } else if (m.includes("residency") || m.includes("residence")) {
+      return {
+        type: "bot",
+        text: "🏠 Certificate of Residency:\n\nRequirements:\n• Valid ID\n• Proof of residency (utility bills, rental contract, etc.)\n• Barangay Clearance\n• Processing Fee\n\nPlease call the Barangay Hall to confirm current requirements.",
+        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
+      };
+    } else if (m.includes("good moral") || m.includes("moral")) {
+      return {
+        type: "bot",
+        text: "✅ Good Moral Certificate:\n\nRequirements:\n• Valid ID\n• Barangay Clearance\n• Purpose of certificate (employment, school, etc.)\n• Processing Fee\n\nVisit the Barangay Hall for processing.",
+        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
+      };
+    } else if (m.includes("indigency")) {
+      return {
+        type: "bot",
+        text: "📄 Certificate of Indigency:\n\nRequirements:\n• Valid ID\n• Proof of residency\n• Purpose of certificate (medical, educational, legal aid, etc.)\n\nSubject to barangay assessment and verification. Visit the Barangay Hall for processing.",
         quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
       };
     } else if (
-      lowerMessage.includes("cedula") ||
-      lowerMessage.includes("community tax")
+      m.includes("blotter") ||
+      m.includes("incident") ||
+      m.includes("report")
     ) {
       return {
         type: "bot",
-        text: "📄 Cedula (Community Tax Certificate):\n\nCommunity tax certificate application\n\nRequirements:\n• Valid ID\n• Proof of income (for employed)\n• Real property declaration (if applicable)\n• Payment of tax\n\nVisit the Barangay Hall during office hours.\n\nWhat else can I help you with?",
-        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
-      };
-    } else if (
-      lowerMessage.includes("business permit") ||
-      lowerMessage.includes("permit")
-    ) {
-      return {
-        type: "bot",
-        text: "🏢 Business Permit:\n\nBusiness permit assistance for barangay endorsement\n\nRequirements:\n• Valid ID\n• Business registration documents\n• Proof of business location\n• Barangay Clearance\n\nThe barangay will provide endorsement for your city business permit application.\n\nNeed help with anything else?",
-        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
-      };
-    } else if (
-      lowerMessage.includes("residency") ||
-      lowerMessage.includes("residence certificate")
-    ) {
-      return {
-        type: "bot",
-        text: "🏠 Residency Certificate:\n\nProof of residency certification\n\nRequirements:\n• Valid ID\n• Proof of residency (utility bills, rental contract, etc.)\n• Barangay Clearance\n• Processing Fee\n\nFor new residents, minimum of 6 months residency may be required.\n\nWhat else can I help you with?",
-        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
-      };
-    } else if (
-      lowerMessage.includes("good moral") ||
-      lowerMessage.includes("moral certificate")
-    ) {
-      return {
-        type: "bot",
-        text: "✅ Good Moral Certificate:\n\nCertificate of good moral character\n\nRequirements:\n• Valid ID\n• Barangay Clearance\n• Purpose of certificate (employment, school, etc.)\n• No pending cases in the barangay\n• Processing Fee\n\nVisit the Barangay Hall for processing.\n\nNeed help with anything else?",
-        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
-      };
-    } else if (
-      lowerMessage.includes("blotter") ||
-      lowerMessage.includes("incident") ||
-      lowerMessage.includes("report")
-    ) {
-      return {
-        type: "bot",
-        text: "📝 Barangay Blotter:\n\nReport and record incidents\n\nYou can file a blotter report for:\n• Theft or lost items\n• Disturbances\n• Minor disputes\n• Incidents within the barangay\n\nVisit the Barangay Hall to file a report. Bring valid ID and any evidence or witnesses if available.\n\nFor emergencies, call our hotline immediately!",
+        text: `📝 Barangay Blotter:\n\nYou can file a blotter report for incidents such as theft, disturbances, or minor disputes within the barangay.\n\nVisit the Barangay Hall and bring a valid ID and any evidence or witnesses, if available.\n\nFor emergencies, call 911 or our hall at ${BRGY.phone}.`,
         quickReplies: ["Emergency", "Mediation", "Contact Info", "Services"],
       };
     } else if (
-      lowerMessage.includes("health") ||
-      lowerMessage.includes("medical") ||
-      lowerMessage === "health services"
+      m.includes("mediation") ||
+      m.includes("lupon") ||
+      m.includes("dispute")
     ) {
       return {
         type: "bot",
-        text: "🏥 Health Services:\n\nAvailable at the Barangay Health Center:\n• Free medical consultations\n• Immunizations for children\n• Prenatal care\n• Family planning\n• Blood pressure monitoring\n• Dental services (schedule varies)\n\nHealth Center Hours: Mon-Fri, 8:00 AM - 4:00 PM",
+        text: "⚖️ Mediation (Lupong Tagapamayapa):\n\nWe help resolve disputes between neighbors, families, or community members through mediation and conciliation.\n\nVisit the Barangay Hall to file a complaint or request mediation. Bring relevant documents.",
         quickReplies: ["Office Hours", "Contact Info", "Services"],
       };
-    } else if (
-      lowerMessage.includes("mediation") ||
-      lowerMessage.includes("lupon") ||
-      lowerMessage.includes("dispute")
-    ) {
+    } else if (m.includes("health") || m.includes("medical")) {
       return {
         type: "bot",
-        text: "⚖️ Mediation Services (Lupong Tagapamayapa):\n\nWe help resolve disputes between neighbors, families, or community members through:\n• Mediation\n• Conciliation\n• Arbitration\n\nVisit the Barangay Hall to file a complaint or request mediation. Bring relevant documents and both parties if possible.",
+        text: `🏥 Health Services:\n\nFor health programs and schedules (consultations, immunization, prenatal care), please contact the Barangay Hall at ${BRGY.phone} or visit during office hours.`,
         quickReplies: ["Office Hours", "Contact Info", "Services"],
       };
-    } else if (
-      lowerMessage.includes("indigency") ||
-      lowerMessage === "indigency"
-    ) {
+    } else if (m.includes("senior") || m.includes("pwd")) {
       return {
         type: "bot",
-        text: "📄 Certificate of Indigency:\n\nCertificate of indigency for qualified residents\n\nRequirements:\n• Valid ID\n• Proof of residency\n• Barangay Clearance\n• Purpose of certificate (medical, educational, legal aid, etc.)\n• Proof of financial status\n\nSubject to barangay assessment and verification.\n\nVisit the Barangay Hall for processing.",
+        text: "👴👵♿ Senior Citizen & PWD Assistance:\n\nThe barangay can assist with referrals and requirements for Senior Citizen and PWD IDs and benefits.\n\nVisit during office hours with your documents (birth certificate; medical certificate for PWD).",
+        quickReplies: ["Office Hours", "Contact Info", "Services"],
+      };
+    } else if (word("id") || m.includes("barangay id")) {
+      return {
+        type: "bot",
+        text: "🪪 Barangay ID:\n\nPlease visit the Barangay Hall for ID processing during office hours. Bring a valid ID and proof of residency.",
         quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
       };
-    } else if (
-      lowerMessage.includes("senior") ||
-      lowerMessage.includes("pwd")
-    ) {
+    } else if (m.includes("service")) {
       return {
         type: "bot",
-        text: "👴👵♿ Senior Citizen & PWD Assistance:\n\nWe provide:\n• Senior Citizen ID\n• PWD ID\n• Assistance with benefits\n• Referrals to city programs\n• Monthly assistance programs\n\nVisit during office hours with required documents (birth certificate, medical certificate for PWD).",
-        quickReplies: ["Office Hours", "Contact Info", "Services"],
+        text: "🏛️ Barangay Services:\n\n• Barangay Clearance\n• Cedula (Community Tax Certificate)\n• Business Permit Clearance\n• Certificate of Indigency\n• Certificate of Residency\n• Good Moral Certificate\n• Barangay Blotter\n• Mediation (Lupong Tagapamayapa)\n• Senior Citizen & PWD Assistance\n\nWhat specific service do you need?",
+        quickReplies: ["Clearance", "Cedula", "Business Permit", "Indigency"],
       };
     } else if (
-      lowerMessage.includes("emergency") ||
-      lowerMessage.includes("hotline")
+      m.includes("contact") ||
+      m.includes("phone") ||
+      m.includes("email") ||
+      m.includes("call")
     ) {
       return {
         type: "bot",
-        text: "🚨 Emergency Contacts:\n\nBarangay Hotline: (02) 8872-9664\n\nLas Piñas City Police Station (Brgy. Pamplona Dos):\n• (02) 8718-221\n• (02) 8808-7395\n\nMedical Emergency: 911\n\nFor barangay concerns, contact our hotline anytime!",
+        text: `📞 Contact Us:\n\n• Phone: ${BRGY.phone}\n• Email: ${BRGY.email}\n• Office: Aquarius St., Pamplona Park Subd., Pamplona Dos, Las Piñas City\n\nFeel free to reach out through any of these channels!`,
+        quickReplies: ["Office Hours", "Visit Us", "Services", "Our Mission"],
+      };
+    } else if (
+      m.includes("hour") ||
+      m.includes("open") ||
+      m.includes("schedule")
+    ) {
+      return {
+        type: "bot",
+        text: `🕐 Office Hours:\n\n${BRGY.hours}\n\n⚠️ For emergencies, call 911 or the Barangay Hall at ${BRGY.phone}.\n\nNeed help with a specific service?`,
+        quickReplies: ["Services", "Contact Info", "Visit Us"],
+      };
+    } else if (m.includes("emergency") || m.includes("hotline")) {
+      return {
+        type: "bot",
+        text: `🚨 Emergency Contacts:\n\nNational Emergency Hotline: 911\nBarangay Hall: ${BRGY.phone}\n\nFor barangay concerns, contact our hall during office hours.`,
         quickReplies: ["Contact Info", "Services", "Office Hours"],
       };
-    } else if (
-      lowerMessage.includes("thank") ||
-      lowerMessage.includes("salamat")
-    ) {
+    } else if (m.includes("thank") || m.includes("salamat")) {
       return {
         type: "bot",
         text: "Walang anuman! You're welcome! 😊 Feel free to ask if you need any other assistance. Mabuhay ang Pamplona Dos!",
         quickReplies: ["Our Mission", "Services", "Contact Info"],
       };
-    } else {
-      return {
-        type: "bot",
-        text: "Thank you for your message! For detailed information, please visit Barangay Pamplona Dos Hall during office hours or contact us through our hotline and social media channels. We're here to serve you!",
-        quickReplies: [
-          "Our Mission",
-          "Services",
-          "Contact Info",
-          "Office Hours",
-        ],
-      };
     }
+
+    return {
+      type: "bot",
+      text: `Thank you for your message! For detailed information, please visit ${BRGY.name} Hall during office hours or call us at ${BRGY.phone}. We're here to serve you!`,
+      quickReplies: ["About Us", "Services", "Contact Info", "Office Hours"],
+    };
   };
 
   return (
@@ -364,12 +350,13 @@ export default function Chatbot() {
             <div className="flex-1">
               <h3 className="font-bold text-lg">Pamplona Dos Assistant</h3>
               <p className="text-xs text-brand-gold-100">
-                Barangay Las Piñas City
+                Barangay Pamplona Dos, Las Piñas City
               </p>
             </div>
             <button
               onClick={() => setIsChatOpen(false)}
               className="hover:bg-brand-gold-700 p-1 rounded transition-colors"
+              aria-label="Close chat"
             >
               <X className="w-5 h-5" />
             </button>
@@ -421,13 +408,14 @@ export default function Chatbot() {
                 type="text"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
                 placeholder="Type your message..."
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-brand-gold-500 focus:border-transparent text-sm"
               />
               <button
                 onClick={() => handleSendMessage()}
                 className="bg-brand-gold-600 text-white p-2 rounded-full hover:bg-brand-gold-700 transition-colors"
+                aria-label="Send message"
               >
                 <Send className="w-5 h-5" />
               </button>

@@ -364,7 +364,7 @@ export default function Home() {
             <div className="relative order-2 lg:order-1">
               <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-[#E4F1E4]">
                 <img
-                  src="/images/meeting/1.jpg"
+                  src="/our-team2.jpg"
                   alt="Barangay Pamplona Dos"
                   className="h-full w-full object-cover"
                 />
